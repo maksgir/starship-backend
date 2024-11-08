@@ -1,0 +1,349 @@
+openapi: 3.0.0
+info:
+  title: Space Marine API
+  description: API для управления коллекцией объектов SpaceMarine.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api/v1
+paths:
+  /spacemarines:
+    get:
+      summary: Получение списка Space Marines
+      description: Получение массива объектов с возможностью сортировки, фильтрации и пагинации.
+      parameters:
+        - name: sortBy
+          in: query
+          description: Поле для сортировки (например, name, health).
+          schema:
+            type: string
+        - name: orderBy
+          in: query
+          description: Порядок сортировки.
+          schema:
+            type: string
+            enum: [ASC, DESC]
+        - name: filters
+          in: query
+          description: Поле и значение для фильтрации (например, health>50).
+          schema:
+            type: array
+            items:
+              type: string
+        - name: page
+          in: query
+          description: Номер страницы для вывода.
+          schema:
+            type: integer
+            minimum: 0
+            exclusiveMinimum: true
+            default: 1
+        - name: size
+          in: query
+          description: Размер страницы (количество объектов на странице).
+          schema:
+            type: integer
+            minimum: 0
+            exclusiveMinimum: true
+            default: 20
+      responses:
+        '200':
+          description: Успешный ответ, возвращает список Space Marines.
+          content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpaceMarine'
+        '400':
+          description: Некорректные параметры запроса.
+          content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BadParamsResponse'
+        '500':
+          description: Ошибка обработки запроса.
+        '503':
+          description: Сервис недоступен.
+    post:
+      summary: Добавление нового Space Marine
+      requestBody:
+        description: Данные нового объекта Space Marine.
+        required: true
+        content:
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/SpaceMarine'
+      responses:
+        '201':
+          description: Успешное создание Space Marine.
+        '400':
+          description: Некорректные данные для создания Space Marine.
+          content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BadParamsResponse'
+        '500':
+          description: Ошибка обработки запроса.
+
+  /spacemarines/{id}:
+    get:
+      summary: Получение Space Marine по ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Успешный ответ, возвращает объект Space Marine.
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/SpaceMarine'
+        '400':
+          description: Некорректные параметры запроса.
+          content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BadParamsResponse'
+        '404':
+          description: Space Marine не найден.
+        '500':
+          description: Ошибка обработки запроса.
+        '503':
+          description: Сервис недоступен.
+    put:
+      summary: Обновление Space Marine по ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Данные для обновления Space Marine.
+        required: true
+        content:
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/SpaceMarine'
+      responses:
+        '200':
+          description: Успешное обновление Space Marine.
+        '400':
+          description: Некорректные данные для обновления.
+          content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BadParamsResponse'
+        '404':
+          description: Space Marine не найден.
+        '500':
+          description: Ошибка обработки запроса.
+        '503':
+          description: Сервис недоступен.
+    delete:
+      summary: Удаление Space Marine по ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Успешное удаление Space Marine.
+        '404':
+          description: Space Marine не найден.
+        '500':
+          description: Ошибка обработки запроса.
+        '503':
+          description: Сервис недоступен.
+
+  /spacemarines/group-by-creation-date:
+    get:
+      summary: Группировка Space Marines по дате создания
+      parameters:
+        - name: page
+          in: query
+          description: Номер страницы для вывода.
+          schema:
+            type: integer
+            minimum: 0
+            exclusiveMinimum: true
+            default: 1
+        - name: size
+          in: query
+          description: Размер страницы (количество объектов на странице).
+          schema:
+            type: integer
+            minimum: 0
+            exclusiveMinimum: true
+            default: 20
+      description: Возвращает количество элементов в каждой группе по дате создания.
+      responses:
+        '200':
+          description: Успешный ответ, возвращает данные по группировке.
+          content:
+            application/xml:
+              schema:
+                type: object
+                additionalProperties:
+                  type: integer
+
+        '400':
+          description: Некорректные параметры для пагинации.
+          content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BadParamsResponse'
+        '500':
+          description: Ошибка обработки запроса.
+        '503':
+          description: Сервис недоступен.
+
+
+  /spacemarines/count-by-category:
+    get:
+      summary: Подсчет Space Marines по категории
+      parameters:
+        - name: category
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [SCOUT, TACTICAL, TERMINATOR, CHAPLAIN, HELIX]
+      responses:
+        '200':
+          description: Успешный ответ, возвращает количество объектов.
+          content:
+            application/xml:
+              schema:
+                type: integer
+        '400':
+          description: Введенной категории не существует
+          content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BadParamsResponse'
+        '500':
+          description: Ошибка обработки запроса.
+        '503':
+          description: Сервис недоступен.
+
+  /spacemarines/search-by-name:
+    get:
+      summary: Поиск Space Marines по имени
+      parameters:
+        - name: nameSubstring
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Успешный ответ, возвращает массив объектов, имя которых содержит заданную подстроку.
+          content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpaceMarine'
+        '404':
+          description: Space Marine не найден.
+        '500':
+          description: Ошибка обработки запроса.
+        '503':
+          description: Сервис недоступен.
+
+components:
+  schemas:
+    SpaceMarine:
+      type: object
+      required:
+        - id
+        - name
+        - coordinates
+        - creationDate
+        - health
+        - meleeWeapon
+      properties:
+        id:
+          type: integer
+          minimum: 1
+          readOnly: true
+        name:
+          type: string
+          minLength: 1
+        coordinates:
+          $ref: '#/components/schemas/Coordinates'
+        creationDate:
+          type: string
+          format: date-time
+          readOnly: true
+        health:
+          type: number
+          minimum: 0
+          exclusiveMinimum: true
+        category:
+          type: string
+          enum: [SCOUT, TACTICAL, TERMINATOR, CHAPLAIN, HELIX]
+        weaponType:
+          type: string
+          enum: [HEAVY_BOLTGUN, MELTAGUN, COMBI_PLASMA_GUN, INFERNO_PISTOL, MULTI_MELTA]
+        meleeWeapon:
+          type: string
+          enum: [CHAIN_SWORD, POWER_SWORD, LIGHTING_CLAW, POWER_FIST]
+        chapter:
+          $ref: '#/components/schemas/Chapter'
+
+    Coordinates:
+      type: object
+      required:
+        - x
+        - y
+      properties:
+        x:
+          type: number
+          maximum: 315
+        y:
+          type: integer
+          maximum: 708
+
+    Chapter:
+      type: object
+      required:
+        - name
+        - marinesCount
+      properties:
+        name:
+          type: string
+          minLength: 1
+        parentLegion:
+          type: string
+        marinesCount:
+          type: integer
+          minimum: 0
+          exclusiveMinimum: true
+          maximum: 1000
+        world:
+          type: string
+    BadParamsResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          minLength: 1

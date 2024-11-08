@@ -1,0 +1,89 @@
+openapi: 3.0.0
+info:
+  title: Starship API
+  description: API для управления высадкой Space Marines с корабля.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api/v1
+paths:
+  /starship/{starshipId}/unload/{spaceMarineId}:
+    post:
+      summary: Высадка выбранного десантника с корабля
+      description: Высадка десантника с корабля по его ID и ID корабля.
+      parameters:
+        - name: starshipId
+          in: path
+          required: true
+          description: ID корабля
+          schema:
+            type: integer
+        - name: spaceMarineId
+          in: path
+          required: true
+          description: ID десантника
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Десантник успешно высажен с корабля.
+        '404':
+          description: Корабль или десантник не найдены, Десантника нет на корабле.
+        '400':
+          description: Некорректные данные запроса.
+          content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BadParamsResponse'
+        '500':
+          description: Ошибка обработки запроса.
+        '503':
+          description: Сервис недоступен.
+
+  /starship/{starshipId}/unload-all:
+    post:
+      summary: Высадка всех десантников с корабля
+      description: Высадка всех десантников с указанного корабля.
+      parameters:
+        - name: starshipId
+          in: path
+          required: true
+          description: ID корабля
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Все десантники успешно высажены с корабля.
+        '404':
+          description: Корабль не найден.
+        '400':
+          description: Некорректные данные запроса.
+          content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BadParamsResponse'
+        '500':
+          description: Ошибка обработки запроса.
+        '503':
+          description: Сервис недоступен.
+
+
+components:
+  schemas:
+    Starship:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    SpaceMarine:
+      $ref: '#/components/schemas/SpaceMarine'
+    BadParamsResponse:
+      $ref: '#/components/schemas/BadParamsResponse'
