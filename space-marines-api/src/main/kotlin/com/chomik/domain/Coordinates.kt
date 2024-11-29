@@ -3,8 +3,13 @@ package com.chomik.domain
 import jakarta.persistence.Embeddable
 import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.NotNull
+import jakarta.xml.bind.annotation.XmlAccessType
+import jakarta.xml.bind.annotation.XmlAccessorType
+import jakarta.xml.bind.annotation.XmlRootElement
 
 @Embeddable
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 data class Coordinates(
 
     @field:NotNull

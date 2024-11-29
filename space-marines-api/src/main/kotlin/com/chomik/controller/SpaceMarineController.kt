@@ -18,7 +18,7 @@ class SpaceMarineController {
 
     @GET
     @Path("/{space-marine-id}")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_XML)
     fun getSpaceMarine(
         @PathParam("space-marine-id") spaceMarineId: Long,
     ): Response {

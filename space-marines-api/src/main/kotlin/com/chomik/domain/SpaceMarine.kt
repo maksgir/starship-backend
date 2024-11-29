@@ -8,8 +8,13 @@ import java.time.LocalDateTime
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Positive
+import jakarta.xml.bind.annotation.XmlAccessType
+import jakarta.xml.bind.annotation.XmlAccessorType
+import jakarta.xml.bind.annotation.XmlRootElement
 
 @Entity
+@XmlRootElement(name = "space-marine")
+@XmlAccessorType(XmlAccessType.FIELD)
 data class SpaceMarine(
 
     @Id
@@ -17,16 +22,16 @@ data class SpaceMarine(
     val id: Long? = null,
 
     @field:NotBlank
-    val name: String,
+    val name: String? = null,
 
     @Embedded
-    val coordinates: Coordinates,
+    val coordinates: Coordinates? = null,
 
     @Column(name = "creation_date", updatable = false)
     val creationDate: LocalDateTime = LocalDateTime.now(),
 
     @field:Positive
-    val health: Double,
+    val health: Double? = null,
 
     @Enumerated(EnumType.STRING)
     val category: Category? = null,
@@ -37,9 +42,9 @@ data class SpaceMarine(
 
     @Enumerated(EnumType.STRING)
     @Column(name = "melee_weapon", nullable = false)
-    val meleeWeapon: MeleeWeapon,
+    val meleeWeapon: MeleeWeapon? = null,
 
     @ManyToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = "chapter_id", nullable = false)
-    val chapter: Chapter
+    val chapter: Chapter? = null
 )
