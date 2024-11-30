@@ -10,7 +10,6 @@ import com.chomik.domain.enums.SortOrder
 import com.chomik.service.SpaceMarinesService
 import com.chomik.util.buildBadRequestResponse
 import jakarta.inject.Inject
-import jakarta.ws.rs.*
 import jakarta.ws.rs.Consumes
 import jakarta.ws.rs.DELETE
 import jakarta.ws.rs.DefaultValue
@@ -171,6 +170,7 @@ class SpaceMarineController {
 
     @GET
     @Path("/count-by-category")
+    @Produces(MediaType.APPLICATION_XML)
     fun countByCategory(@QueryParam("category") category: String): Response {
         return try {
             val count = spaceMarinesService.countByCategory(category)
@@ -189,15 +189,16 @@ class SpaceMarineController {
 
     @GET
     @Path("/search-by-name")
+    @Produces(MediaType.APPLICATION_XML)
     fun searchByName(@QueryParam("nameSubstring") nameSubstring: String): Response {
         return try {
             val results = spaceMarinesService.searchByName(nameSubstring)
             if (results.isEmpty()) {
                 Response.status(Response.Status.NOT_FOUND)
-                    .entity("No Space Marines found matching the given name substring.")
+                    .entity(ErrorResponseDto(Response.Status.NOT_FOUND.statusCode, "No Space Marines found matching the given name substring."))
                     .build()
             } else {
-                Response.ok(results).build()
+                Response.ok(SpaceMarinesResponseDto(data = results, total = results.size)).build()
             }
         } catch (e: IllegalArgumentException) {
             Response.status(Response.Status.BAD_REQUEST)

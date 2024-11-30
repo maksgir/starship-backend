@@ -10,6 +10,6 @@ import jakarta.xml.bind.annotation.XmlRootElement
 data class SpaceMarinesResponseDto(
     val data: List<SpaceMarine>,
     val total: Int,
-    val page: Int?,
-    val limit: Int?,
+    val page: Int? = null,
+    val limit: Int? = null,
 )
