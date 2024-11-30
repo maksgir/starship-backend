@@ -21,7 +21,7 @@ data class SpaceMarine(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
+    val id: Long? = null,
 
     @field:NotBlank
     val name: String,
