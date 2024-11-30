@@ -11,5 +11,8 @@ class SpaceMarinesService {
     @Inject
     private lateinit var spaceMarinesRepository: SpaceMarinesRepository
 
-    fun getSpaceMarineById(spaceMarineId: Long): SpaceMarine? = spaceMarinesRepository.getSpaceMarine(spaceMarineId)
+    fun findById(spaceMarineId: Long): SpaceMarine? = spaceMarinesRepository.findById(spaceMarineId)
+    fun deleteById(spaceMarineId: Long) {
+        spaceMarinesRepository.deleteById(spaceMarineId)
+    }
 }

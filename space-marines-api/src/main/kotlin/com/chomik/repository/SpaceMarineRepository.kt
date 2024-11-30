@@ -16,94 +16,48 @@ class SpaceMarinesRepository {
     @Inject
     private lateinit var databaseSessionManager: DatabaseSessionManager
 
-    fun saveSpaceMarine(spaceMarine: SpaceMarine) {
-        val session: Session = databaseSessionManager.getSession()
-        try {
-            session.beginTransaction()
-
+    fun save(spaceMarine: SpaceMarine) {
+        executeWithSession { session ->
             session.persist(spaceMarine)
-
-            session.transaction.commit()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            if (session.transaction.isActive) {
-                session.transaction.rollback()
-            }
-            throw Excep(
-                message = "An error occurred while saving SpaceMarine entity",
-                cause = e,
-            )
-        } finally {
-            databaseSessionManager.closeSession(session)
         }
     }
 
-    fun getSpaceMarine(spaceMarineId: Long): SpaceMarine? {
-        val session: Session = databaseSessionManager.getSession()
-        try {
-            session.beginTransaction()
-
-            return session.createQuery("SELECT y FROM SpaceMarine y WHERE y.id = :id", SpaceMarine::class.java)
+    fun findById(spaceMarineId: Long): SpaceMarine? {
+        return executeWithSession { session ->
+            session.createQuery("SELECT y FROM SpaceMarine y WHERE y.id = :id", SpaceMarine::class.java)
                 .setParameter("id", spaceMarineId)
                 .singleResultOrNull
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-            if (session.transaction.isActive) {
-                session.transaction.rollback()
-            }
-            throw Excep(
-                message = "An error occurred while retrieving SpaceMarine entity with id = $spaceMarineId",
-                cause = e,
-            )
-        } finally {
-            if (session.isOpen) {
-                databaseSessionManager.closeSession(session)
-            }
         }
     }
 
-    fun updateSpaceMarine(spaceMarine: SpaceMarine) {
-        val session: Session = databaseSessionManager.getSession()
-        try {
-            session.beginTransaction()
-
+    fun update(spaceMarine: SpaceMarine) {
+        executeWithSession { session ->
             session.merge(spaceMarine)
-
-            session.transaction.commit()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            if (session.transaction.isActive) {
-                session.transaction.rollback()
-            }
-            throw Excep(
-                message = "An error occurred while updating SpaceMarine entity with id = ${spaceMarine.id}",
-                cause = e,
-            )
-        } finally {
-            if (session.isOpen) {
-                databaseSessionManager.closeSession(session)
-            }
         }
     }
 
-    fun deleteSpaceMarineById(spaceMarineId: Long): Int {
-        val session: Session = databaseSessionManager.getSession()
-        try {
-            session.beginTransaction()
-
-            return session
-                .createMutationQuery("DELETE FROM SpaceMarine y WHERE y.id = :id")
+    fun deleteById(spaceMarineId: Long): Int {
+        return executeWithSession { session ->
+            session.createMutationQuery("DELETE FROM SpaceMarine y WHERE y.id = :id")
                 .setParameter("id", spaceMarineId)
                 .executeUpdate()
+        }
+    }
 
+    private inline fun <T> executeWithSession(action: (Session) -> T): T {
+        val session: Session = databaseSessionManager.getSession()
+        return try {
+            session.beginTransaction()
+            val result = action(session)
+            session.transaction.commit()
+            result
         } catch (e: Exception) {
             e.printStackTrace()
             if (session.transaction.isActive) {
                 session.transaction.rollback()
             }
             throw Excep(
-                message = "An error occurred while deleting SpaceMarine entity with id = $spaceMarineId",
+                message = "An error occurred during database operation",
                 cause = e,
             )
         } finally {
@@ -112,4 +66,5 @@ class SpaceMarinesRepository {
             }
         }
     }
+
 }
