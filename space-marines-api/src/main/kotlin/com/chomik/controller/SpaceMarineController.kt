@@ -186,4 +186,28 @@ class SpaceMarineController {
                 .build()
         }
     }
+
+    @GET
+    @Path("/search-by-name")
+    fun searchByName(@QueryParam("nameSubstring") nameSubstring: String): Response {
+        return try {
+            val results = spaceMarinesService.searchByName(nameSubstring)
+            if (results.isEmpty()) {
+                Response.status(Response.Status.NOT_FOUND)
+                    .entity("No Space Marines found matching the given name substring.")
+                    .build()
+            } else {
+                Response.ok(results).build()
+            }
+        } catch (e: IllegalArgumentException) {
+            Response.status(Response.Status.BAD_REQUEST)
+                .entity("Invalid request: ${e.message}")
+                .build()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity("An error occurred while processing the request.")
+                .build()
+        }
+    }
 }

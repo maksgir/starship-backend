@@ -50,5 +50,13 @@ class SpaceMarinesService {
         return spaceMarinesRepository.countByCategory(category)
     }
 
+    fun searchByName(nameSubstring: String): List<SpaceMarine> {
+        if (nameSubstring.isBlank()) {
+            throw IllegalArgumentException("The name substring must not be empty.")
+        }
+
+        return spaceMarinesRepository.searchByName(nameSubstring)
+    }
+
 
 }

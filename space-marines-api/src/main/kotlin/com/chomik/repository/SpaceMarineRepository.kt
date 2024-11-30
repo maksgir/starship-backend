@@ -146,4 +146,15 @@ class SpaceMarinesRepository {
                 .toInt()
         }
     }
+
+    fun searchByName(nameSubstring: String): List<SpaceMarine> {
+        return executeWithSession { session ->
+            session.createQuery(
+                "FROM SpaceMarine y WHERE LOWER(y.name) LIKE LOWER(:nameSubstring)",
+                SpaceMarine::class.java
+            )
+                .setParameter("nameSubstring", "%$nameSubstring%")
+                .resultList
+        }
+    }
 }
