@@ -4,6 +4,7 @@ import com.chomik.configuration.DatabaseSessionManager
 import com.chomik.domain.Excep
 import com.chomik.domain.QueryParams
 import com.chomik.domain.SpaceMarine
+import com.chomik.domain.enums.Category
 
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
@@ -141,7 +142,7 @@ class SpaceMarinesRepository {
                 "SELECT COUNT(y) FROM SpaceMarine y WHERE y.category = :category",
                 Long::class.java
             )
-                .setParameter("category", category)
+                .setParameter("category", Category.valueOf(category))
                 .singleResult
                 .toInt()
         }
