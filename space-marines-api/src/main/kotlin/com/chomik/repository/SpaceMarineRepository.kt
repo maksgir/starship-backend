@@ -58,6 +58,29 @@ class SpaceMarinesRepository {
         }
     }
 
+    fun groupByCreationDate(page: Int, size: Int): Map<String, Int> {
+        return executeWithSession { session ->
+            val query = session.createQuery(
+                """
+            SELECT DATE(y.creationDate) as creationDate, COUNT(y) as count 
+            FROM SpaceMarine y 
+            GROUP BY DATE(y.creationDate)
+            ORDER BY DATE(y.creationDate)
+            """,
+                Array<Any>::class.java
+            )
+                .setFirstResult((page - 1) * size)
+                .setMaxResults(size)
+
+            query.resultList.associate {
+                val date = it[0].toString()
+                val count = (it[1] as Long).toInt()
+                date to count
+            }
+        }
+    }
+
+
     private inline fun <T> executeWithSession(action: (Session) -> T): T {
         val session: Session = databaseSessionManager.getSession()
         return try {

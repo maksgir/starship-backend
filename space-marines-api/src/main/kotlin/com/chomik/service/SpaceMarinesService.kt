@@ -17,4 +17,14 @@ class SpaceMarinesService {
         spaceMarinesRepository.deleteById(spaceMarineId)
     }
     fun getSpaceMarines(queryParams: QueryParams): List<SpaceMarine> = spaceMarinesRepository.getSpaceMarines(queryParams)
+
+    fun findGroupedByCreationDate(page: Int, size: Int): Map<String, Int> {
+        if (page <= 0 || size <= 0) {
+            throw IllegalArgumentException("Page and size must be greater than 0")
+        }
+
+        return spaceMarinesRepository.groupByCreationDate(page, size)
+    }
+
+
 }

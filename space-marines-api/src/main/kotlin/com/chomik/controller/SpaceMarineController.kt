@@ -2,7 +2,6 @@ package com.chomik.controller
 
 import com.chomik.domain.Filter
 import com.chomik.domain.QueryParams
-import com.chomik.domain.SpaceMarine
 import com.chomik.domain.dto.ErrorResponseDto
 import com.chomik.domain.dto.SpaceMarinesResponseDto
 import com.chomik.domain.enums.SortColumn
@@ -10,6 +9,7 @@ import com.chomik.domain.enums.SortOrder
 import com.chomik.service.SpaceMarinesService
 import com.chomik.util.buildBadRequestResponse
 import jakarta.inject.Inject
+import jakarta.ws.rs.*
 import jakarta.ws.rs.DELETE
 import jakarta.ws.rs.DefaultValue
 import jakarta.ws.rs.GET
@@ -19,6 +19,7 @@ import jakarta.ws.rs.Produces
 import jakarta.ws.rs.QueryParam
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
+
 
 @Path("/v1/spacemarines")
 class SpaceMarineController {
@@ -110,5 +111,31 @@ class SpaceMarineController {
         const val DEFAULT_PAGE_NUMBER = "1"
         const val DEFAULT_PAGE_SIZE = "20"
         const val SORT_SPLIT_SYMBOL = ","
+    }
+
+
+    @GET
+    @Path("/group-by-creation-date")
+    @Produces(MediaType.APPLICATION_XML)
+    fun getSpaceMarinesGroupedByCreationDate(
+        @QueryParam("page") page: Int?,
+        @QueryParam("size") size: Int?
+    ): Response {
+        val pageNumber = page ?: 1
+        val pageSize = size ?: 20
+
+        try {
+            if (pageNumber <= 0 || pageSize <= 0) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Неверные параметры пагинации").build()
+            }
+
+            val result = spaceMarinesService.findGroupedByCreationDate(pageNumber, pageSize)
+
+            return Response.ok(result).build()
+        } catch (e: Exception) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity("Ошибка обработки запроса").build()
+        }
     }
 }
