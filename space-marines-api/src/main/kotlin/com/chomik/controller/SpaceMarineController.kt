@@ -168,4 +168,22 @@ class SpaceMarineController {
                 .entity("Ошибка обработки запроса").build()
         }
     }
+
+    @GET
+    @Path("/count-by-category")
+    fun countByCategory(@QueryParam("category") category: String): Response {
+        return try {
+            val count = spaceMarinesService.countByCategory(category)
+            Response.ok(count).build()
+        } catch (e: IllegalArgumentException) {
+            Response.status(Response.Status.BAD_REQUEST)
+                .entity(ErrorResponseDto(Response.Status.BAD_REQUEST.statusCode, "Invalid category: ${e.message}"))
+                .build()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity("An error occurred while processing the request.")
+                .build()
+        }
+    }
 }

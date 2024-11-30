@@ -134,4 +134,16 @@ class SpaceMarinesRepository {
 
         return sort
     }
+
+    fun countByCategory(category: String): Int {
+        return executeWithSession { session ->
+            session.createQuery(
+                "SELECT COUNT(y) FROM SpaceMarine y WHERE y.category = :category",
+                Long::class.java
+            )
+                .setParameter("category", category)
+                .singleResult
+                .toInt()
+        }
+    }
 }

@@ -3,6 +3,7 @@ package com.chomik.service
 import com.chomik.domain.QueryParams
 import com.chomik.domain.SpaceMarine
 import com.chomik.domain.dto.SpaceMarineRequestDto
+import com.chomik.domain.enums.Category
 import com.chomik.repository.SpaceMarinesRepository
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
@@ -39,6 +40,14 @@ class SpaceMarinesService {
         }
 
         return spaceMarinesRepository.groupByCreationDate(page, size)
+    }
+
+    fun countByCategory(category: String): Int {
+        if (category !in Category.values().map { e -> e.name }) {
+            throw IllegalArgumentException("The provided category '$category' does not exist.")
+        }
+
+        return spaceMarinesRepository.countByCategory(category)
     }
 
 
