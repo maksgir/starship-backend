@@ -2,17 +2,20 @@ package com.chomik.controller
 
 import com.chomik.domain.Filter
 import com.chomik.domain.QueryParams
-import com.chomik.domain.SpaceMarine
 import com.chomik.domain.dto.ErrorResponseDto
+import com.chomik.domain.dto.SpaceMarineRequestDto
 import com.chomik.domain.dto.SpaceMarinesResponseDto
 import com.chomik.domain.enums.SortColumn
 import com.chomik.domain.enums.SortOrder
 import com.chomik.service.SpaceMarinesService
 import com.chomik.util.buildBadRequestResponse
 import jakarta.inject.Inject
+import jakarta.ws.rs.Consumes
 import jakarta.ws.rs.DELETE
 import jakarta.ws.rs.DefaultValue
 import jakarta.ws.rs.GET
+import jakarta.ws.rs.POST
+import jakarta.ws.rs.PUT
 import jakarta.ws.rs.Path
 import jakarta.ws.rs.PathParam
 import jakarta.ws.rs.Produces
@@ -26,6 +29,7 @@ class SpaceMarineController {
     @Inject
     private lateinit var spaceMarinesService: SpaceMarinesService
 
+    @GET
     @Path("")
     @Produces(MediaType.APPLICATION_XML)
     fun getSpaceMarines(
@@ -70,6 +74,19 @@ class SpaceMarineController {
         }
     }
 
+    @POST
+    @Path("")
+    @Consumes(MediaType.APPLICATION_XML)
+    @Produces(MediaType.APPLICATION_XML)
+    fun createSpaceMarine(spaceMarineRequestDto: SpaceMarineRequestDto): Response {
+        try {
+            val spaceMarine = spaceMarinesService.create(spaceMarineRequestDto)
+            return Response.ok().entity(spaceMarine).build()
+        } catch (e: Exception) {
+            return e.buildBadRequestResponse()
+        }
+    }
+
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_XML)
@@ -91,6 +108,18 @@ class SpaceMarineController {
         }
     }
 
+    @PUT
+    @Path("/{id}")
+    @Consumes(MediaType.APPLICATION_XML)
+    @Produces(MediaType.APPLICATION_XML)
+    fun updateSpaceMarine(@PathParam("id") spaceMarineId: Long, spaceMarineRequestDto: SpaceMarineRequestDto): Response {
+        try {
+            val spaceMarine = spaceMarinesService.updateById(spaceMarineId, spaceMarineRequestDto)
+            return Response.ok().entity(spaceMarine).build()
+        } catch (e: Exception) {
+            return e.buildBadRequestResponse()
+        }
+    }
 
     @DELETE
     @Path("/{id}")
