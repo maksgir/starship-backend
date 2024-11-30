@@ -1,13 +1,22 @@
 package com.chomik.controller
 
+import com.chomik.domain.Filter
+import com.chomik.domain.QueryParams
 import com.chomik.domain.SpaceMarine
+import com.chomik.domain.dto.ErrorResponseDto
+import com.chomik.domain.dto.SpaceMarinesResponseDto
+import com.chomik.domain.enums.SortColumn
+import com.chomik.domain.enums.SortOrder
 import com.chomik.service.SpaceMarinesService
+import com.chomik.util.buildBadRequestResponse
 import jakarta.inject.Inject
 import jakarta.ws.rs.DELETE
+import jakarta.ws.rs.DefaultValue
 import jakarta.ws.rs.GET
 import jakarta.ws.rs.Path
 import jakarta.ws.rs.PathParam
 import jakarta.ws.rs.Produces
+import jakarta.ws.rs.QueryParam
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 
@@ -16,6 +25,50 @@ class SpaceMarineController {
 
     @Inject
     private lateinit var spaceMarinesService: SpaceMarinesService
+
+    @Path("")
+    @Produces(MediaType.APPLICATION_XML)
+    fun getSpaceMarines(
+        @QueryParam("sortBy") sortBy: String?,
+        @QueryParam("orderBy") sortOrder: String?,
+        @QueryParam("filters") filters: List<String>?,
+        @QueryParam("page") @DefaultValue(DEFAULT_PAGE_NUMBER) page: Int,
+        @QueryParam("size") @DefaultValue(DEFAULT_PAGE_SIZE) size: Int,
+    ): Response {
+        val queryParams = QueryParams(
+            sortBy = try {
+                sortBy?.split(SORT_SPLIT_SYMBOL)?.map { SortColumn.fromColumnName(it) }
+            } catch (e: NoSuchElementException) {
+                return e.buildBadRequestResponse()
+            },
+            sortOrder = try {
+                sortOrder?.let { SortOrder.valueOf(it.uppercase()) }
+            } catch (e: IllegalArgumentException) {
+                return e.buildBadRequestResponse()
+            },
+            filters = try {
+                filters?.map { Filter.fromString(it) }
+            } catch (e: IllegalArgumentException) {
+                return e.buildBadRequestResponse()
+            },
+            page = page,
+            size = size,
+        )
+
+        try {
+            val spaceMarine = spaceMarinesService.getSpaceMarines(queryParams)
+            return Response.ok().entity(
+                SpaceMarinesResponseDto(
+                    data = spaceMarine,
+                    total = spaceMarine.size,
+                    limit = queryParams.size,
+                    page = queryParams.page
+                )
+            ).build()
+        } catch (e: Exception) {
+            throw e
+        }
+    }
 
     @GET
     @Path("/{id}")
@@ -28,7 +81,10 @@ class SpaceMarineController {
             if (spaceMarine != null) {
                 Response.ok(spaceMarine).build()
             } else {
-                Response.status(Response.Status.NOT_FOUND).build()
+                Response
+                    .status(Response.Status.NOT_FOUND)
+                    .entity(ErrorResponseDto(Response.Status.NOT_FOUND.statusCode, "User with id $spaceMarineId doesn't exist"))
+                    .build()
             }
         } catch (e: Exception) {
             Response.status(Response.Status.INTERNAL_SERVER_ERROR).build()
@@ -48,5 +104,11 @@ class SpaceMarineController {
         } catch (e: Exception) {
             Response.status(Response.Status.INTERNAL_SERVER_ERROR).build()
         }
+    }
+
+    companion object {
+        const val DEFAULT_PAGE_NUMBER = "1"
+        const val DEFAULT_PAGE_SIZE = "20"
+        const val SORT_SPLIT_SYMBOL = ","
     }
 }

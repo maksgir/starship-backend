@@ -129,6 +129,7 @@
                         <option>no-arg:annotation=jakarta.persistence.Entity</option>
                         <option>no-arg:annotation=jakarta.persistence.Embedded</option>
                         <option>no-arg:annotation=jakarta.persistence.Embeddable</option>
+                        <option>no-arg:annotation=jakarta.xml.bind.annotation.XmlRootElement</option>
                     </pluginOptions>
                 </configuration>
 

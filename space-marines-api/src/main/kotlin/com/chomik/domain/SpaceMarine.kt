@@ -1,5 +1,6 @@
 package com.chomik.domain
 
+import com.chomik.adapter.LocalDateXmlAdapter
 import com.chomik.domain.enums.Category
 import com.chomik.domain.enums.MeleeWeapon
 import com.chomik.domain.enums.WeaponType
@@ -11,27 +12,29 @@ import jakarta.validation.constraints.Positive
 import jakarta.xml.bind.annotation.XmlAccessType
 import jakarta.xml.bind.annotation.XmlAccessorType
 import jakarta.xml.bind.annotation.XmlRootElement
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter
 
 @Entity
-@XmlRootElement(name = "space-marine")
+@XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 data class SpaceMarine(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+    val id: Long,
 
     @field:NotBlank
-    val name: String? = null,
+    val name: String,
 
     @Embedded
-    val coordinates: Coordinates? = null,
+    val coordinates: Coordinates,
 
     @Column(name = "creation_date", updatable = false)
+    @field:XmlJavaTypeAdapter(LocalDateXmlAdapter::class)
     val creationDate: LocalDateTime = LocalDateTime.now(),
 
     @field:Positive
-    val health: Double? = null,
+    val health: Double,
 
     @Enumerated(EnumType.STRING)
     val category: Category? = null,
@@ -42,7 +45,7 @@ data class SpaceMarine(
 
     @Enumerated(EnumType.STRING)
     @Column(name = "melee_weapon", nullable = false)
-    val meleeWeapon: MeleeWeapon? = null,
+    val meleeWeapon: MeleeWeapon,
 
     @ManyToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = "chapter_id", nullable = false)

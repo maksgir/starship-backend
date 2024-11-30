@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/space-marines-api/space-marines-api.iml" filepath="$PROJECT_DIR$/space-marines-api/space-marines-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/starship-backend.iml" filepath="$PROJECT_DIR$/.idea/starship-backend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/unload-manager/unload-manager.iml" filepath="$PROJECT_DIR$/unload-manager/unload-manager.iml" />
     </modules>
   </component>
 </project>

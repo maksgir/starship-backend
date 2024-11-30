@@ -1,5 +1,6 @@
 package com.chomik.service
 
+import com.chomik.domain.QueryParams
 import com.chomik.domain.SpaceMarine
 import com.chomik.repository.SpaceMarinesRepository
 import jakarta.enterprise.context.ApplicationScoped
@@ -15,4 +16,5 @@ class SpaceMarinesService {
     fun deleteById(spaceMarineId: Long) {
         spaceMarinesRepository.deleteById(spaceMarineId)
     }
+    fun getSpaceMarines(queryParams: QueryParams): List<SpaceMarine> = spaceMarinesRepository.getSpaceMarines(queryParams)
 }
