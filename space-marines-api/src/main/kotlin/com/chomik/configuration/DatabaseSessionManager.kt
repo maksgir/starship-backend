@@ -2,6 +2,8 @@ package com.chomik.configuration
 
 import com.chomik.domain.Chapter
 import com.chomik.domain.SpaceMarine
+import com.chomik.domain.Starship
+import com.chomik.domain.StarshipMarine
 import jakarta.enterprise.context.ApplicationScoped
 import org.hibernate.Session
 import org.hibernate.SessionFactory
@@ -19,7 +21,8 @@ class DatabaseSessionManager {
                 .configure("hibernate.cfg.xml")
                 .addAnnotatedClass(SpaceMarine::class.java)
                 .addAnnotatedClass(Chapter::class.java)
-                // .addAnnotatedClass(Starship::class.java)
+                .addAnnotatedClass(Starship::class.java)
+                .addAnnotatedClass(StarshipMarine::class.java)
         StandardServiceRegistryBuilder()
             .applySettings(configuration.properties).build()
         configuration.buildSessionFactory()
