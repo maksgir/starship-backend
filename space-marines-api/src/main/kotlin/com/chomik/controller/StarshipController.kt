@@ -38,16 +38,27 @@ class StarshipController {
         }
     }
 
-//    @POST
-//    @Path("")
-//    @Consumes(MediaType.APPLICATION_XML)
-//    @Produces(MediaType.APPLICATION_XML)
-//    fun createSpaceMarine(spaceMarineRequestDto: SpaceMarineRequestDto): Response {
-//        try {
-//            val spaceMarine = spaceMarinesService.create(spaceMarineRequestDto)
-//            return Response.ok().entity(spaceMarine).build()
-//        } catch (e: Exception) {
-//            return e.buildBadRequestResponse()
-//        }
-//    }
+    @POST
+    @Path("/{starshipId}/load/{spaceMarineId}")
+    @Produces(MediaType.APPLICATION_XML)
+    fun createSpaceMarine(
+        @PathParam("starshipId") starshipId: Long,
+        @PathParam("spaceMarineId") spaceMarineId: Long,
+    ): Response {
+        return try {
+            val createdStarshipMarine = starshipService.loadStarshipOnMarine(starshipId, spaceMarineId)
+            Response.status(Response.Status.CREATED)
+                .entity(createdStarshipMarine)
+                .build()
+        } catch (e: IllegalArgumentException) {
+            Response.status(Response.Status.BAD_REQUEST)
+                .entity("Invalid request: ${e.message}")
+                .build()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity("An error occurred while associating the starship with the marine.")
+                .build()
+        }
+    }
 }

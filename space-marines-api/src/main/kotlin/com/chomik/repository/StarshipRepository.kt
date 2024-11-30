@@ -2,6 +2,7 @@ package com.chomik.repository
 
 import com.chomik.configuration.DatabaseSessionManager
 import com.chomik.domain.Starship
+import com.chomik.domain.StarshipMarine
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
 import org.hibernate.Session
@@ -16,6 +17,13 @@ class StarshipRepository {
         return executeWithSession { session ->
             session.persist(starship)
             starship
+        }
+    }
+
+    fun createStarshipMarine(starshipMarine: StarshipMarine): StarshipMarine {
+        return executeWithSession { session ->
+            session.persist(starshipMarine)
+            starshipMarine
         }
     }
 
