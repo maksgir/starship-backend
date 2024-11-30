@@ -27,6 +27,25 @@ class StarshipRepository {
         }
     }
 
+    fun deleteMarineFromStarship(starshipId: Long, spaceMarineId: Long): Int {
+        return executeWithSession { session ->
+            session.createMutationQuery(
+                "DELETE FROM StarshipMarine WHERE starshipId = :starshipId AND spaceMarineId = :spaceMarineId"
+            )
+                .setParameter("starshipId", starshipId)
+                .setParameter("spaceMarineId", spaceMarineId)
+                .executeUpdate()
+        }
+    }
+
+    fun deleteAllMarinesFromStarship(starshipId: Long): Int {
+        return executeWithSession { session ->
+            session.createMutationQuery("DELETE FROM StarshipMarine WHERE starshipId = :starshipId")
+                .setParameter("starshipId", starshipId)
+                .executeUpdate()
+        }
+    }
+
     private inline fun <T> executeWithSession(action: (Session) -> T): T {
         val session: Session = databaseSessionManager.getSession()
         return try {

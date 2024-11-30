@@ -61,4 +61,33 @@ class StarshipController {
                 .build()
         }
     }
+
+    @POST
+    @Path("/{starshipId}/unload/{spaceMarineId}")
+    fun unloadMarine(
+        @PathParam("starshipId") starshipId: Long,
+        @PathParam("spaceMarineId") spaceMarineId: Long
+    ): Response {
+        val rowAff = starshipService.unloadAllMarines(starshipId)
+        return if (rowAff > 0) {
+            Response.ok("Marine successfully unloaded").build()
+        } else {
+            Response.status(Response.Status.NOT_FOUND)
+                .entity("Marine not found in the starship")
+                .build()
+        }
+    }
+
+    @POST
+    @Path("/{starshipId}/unload-all")
+    fun unloadAllMarines(@PathParam("starshipId") starshipId: Long): Response {
+        val rowAff = starshipService.unloadAllMarines(starshipId)
+        return if (rowAff > 0) {
+            Response.ok("All $rowAff marines successfully unloaded").build()
+        } else {
+            Response.status(Response.Status.NOT_FOUND)
+                .entity("No marines found in the starship")
+                .build()
+        }
+    }
 }

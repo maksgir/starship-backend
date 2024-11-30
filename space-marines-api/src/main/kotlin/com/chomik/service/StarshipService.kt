@@ -32,4 +32,14 @@ class StarshipService {
 
         return starshipRepository.createStarshipMarine(starshipMarine)
     }
+
+    fun unloadMarine(starshipId: Long, spaceMarineId: Long): Int {
+        val rowsAffected = starshipRepository.deleteMarineFromStarship(starshipId, spaceMarineId)
+        return rowsAffected
+    }
+
+    fun unloadAllMarines(starshipId: Long): Int {
+        val rowsAffected = starshipRepository.deleteAllMarinesFromStarship(starshipId)
+        return rowsAffected
+    }
 }
