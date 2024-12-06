@@ -43,7 +43,7 @@ class SpaceMarinesService {
     }
 
     fun countByCategory(category: String): Int {
-        if (category !in Category.values().map { e -> e.name }) {
+        if (category !in Category.entries.map { e -> e.name }) {
             throw IllegalArgumentException("The provided category '$category' does not exist.")
         }
 

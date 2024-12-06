@@ -2,7 +2,9 @@ package com.chomik.controller
 
 import com.chomik.domain.Filter
 import com.chomik.domain.QueryParams
+import com.chomik.domain.dto.CountByCategoryResponseDto
 import com.chomik.domain.dto.ErrorResponseDto
+import com.chomik.domain.dto.GroupByCreationDateResponseDto
 import com.chomik.domain.dto.SpaceMarineRequestDto
 import com.chomik.domain.dto.SpaceMarinesResponseDto
 import com.chomik.domain.enums.SortColumn
@@ -156,12 +158,13 @@ class SpaceMarineController {
         try {
             if (pageNumber <= 0 || pageSize <= 0) {
                 return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("Неверные параметры пагинации").build()
+                    .entity(ErrorResponseDto(Response.Status.BAD_REQUEST.statusCode, "Неверные параметры пагинации"))
+                    .build()
             }
 
             val result = spaceMarinesService.findGroupedByCreationDate(pageNumber, pageSize)
 
-            return Response.ok(result).build()
+            return Response.ok(GroupByCreationDateResponseDto(result)).build()
         } catch (e: Exception) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                 .entity("Ошибка обработки запроса").build()
@@ -174,7 +177,7 @@ class SpaceMarineController {
     fun countByCategory(@QueryParam("category") category: String): Response {
         return try {
             val count = spaceMarinesService.countByCategory(category)
-            Response.ok(count).build()
+            Response.ok(CountByCategoryResponseDto(count)).build()
         } catch (e: IllegalArgumentException) {
             Response.status(Response.Status.BAD_REQUEST)
                 .entity(ErrorResponseDto(Response.Status.BAD_REQUEST.statusCode, "Invalid category: ${e.message}"))
