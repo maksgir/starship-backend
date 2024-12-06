@@ -23,6 +23,12 @@ fun String.camelToSnake(): String {
     return result
 }
 
+fun String.snakeToCamel(): String {
+    return this.split('_')
+        .joinToString("") { it.lowercase().replaceFirstChar { char -> char.uppercase() } }
+        .replaceFirstChar { it.lowercase() }
+}
+
 fun Exception.buildBadRequestResponse(): Response = Response
     .status(Response.Status.BAD_REQUEST)
     .entity(
