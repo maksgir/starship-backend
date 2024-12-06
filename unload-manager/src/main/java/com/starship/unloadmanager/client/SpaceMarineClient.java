@@ -5,7 +5,6 @@ import com.starship.unloadmanager.exception.BadRequestException;
 import com.starship.unloadmanager.exception.ResourceException;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 public class SpaceMarineClient {
@@ -17,48 +16,39 @@ public class SpaceMarineClient {
         this.restTemplate = restTemplate;
     }
 
-    public ResponseEntity<Boolean> checkSpaceMarineExistInStarship(Long starshipId, Long spaceMarineId) {
-        String url = spaceMarineUrl + "/starship/%d/exist/check/%d".formatted(starshipId, spaceMarineId);
-        ResponseEntity<Boolean> response = restTemplate.getForEntity(url, Boolean.class);
+    public String removeSpaceMarineFromStarship(Long starshipId, Long spaceMarineId) {
+        String url = spaceMarineUrl + "/starship/%d/unload/%d".formatted(starshipId, spaceMarineId);
+        byte[] responseBytes = restTemplate.execute(url, HttpMethod.POST, null, response -> {
+            if (response.getStatusCode().isSameCodeAs(HttpStatus.BAD_REQUEST)) {
+                throw new BadRequestException(
+                    new BadParamsResponseDto("Starship %d or space marine %d was not found".formatted(starshipId, spaceMarineId))
+                );
+            }
 
-        if (response.getStatusCode().isSameCodeAs(HttpStatus.BAD_REQUEST)) {
-            throw new BadRequestException(
-                new BadParamsResponseDto("Starship %d or space marine %d was not found".formatted(starshipId, spaceMarineId))
-            );
-        }
+            if (response.getStatusCode().isError()) {
+                throw new ResourceException((HttpStatus) response.getStatusCode(), "Got error while removing space marine: %s".formatted(response.getBody()));
+            }
 
-        if (response.getStatusCode().isError()) {
-            throw new ResourceException((HttpStatus) response.getStatusCode(), "Got error while checking space marine existence");
-        }
+            return response.getBody().readAllBytes();
+        });
 
-        return response;
+        return new String(responseBytes);
     }
 
-    public void removeSpaceMarineFromStarship(Long starshipId, Long spaceMarineId) {
-        String url = spaceMarineUrl + "/starship/%d/marine/%d".formatted(starshipId, spaceMarineId);
-        ResponseEntity<?> response = restTemplate.exchange(url, HttpMethod.DELETE, null, Object.class);
+    public String removeAllSpaceMarinesFromStarship(Long starshipId) {
+        String url = spaceMarineUrl + "/starship/%d/unload-all".formatted(starshipId);
+        byte[] responseBytes = restTemplate.execute(url, HttpMethod.POST, null, response -> {
+            if (response.getStatusCode().isSameCodeAs(HttpStatus.BAD_REQUEST)) {
+                throw new BadRequestException(new BadParamsResponseDto("Starship %d was not found".formatted(starshipId)));
+            }
 
-        if (response.getStatusCode().isSameCodeAs(HttpStatus.BAD_REQUEST)) {
-            throw new BadRequestException(
-                new BadParamsResponseDto("Starship %d or space marine %d was not found".formatted(starshipId, spaceMarineId))
-            );
-        }
+            if (response.getStatusCode().isError()) {
+                throw new ResourceException((HttpStatus) response.getStatusCode(), "Got error while removing all space marines: %s".formatted(response.getBody()));
+            }
 
-        if (response.getStatusCode().isError()) {
-            throw new ResourceException((HttpStatus) response.getStatusCode(), "Got error while removing space marine: %s".formatted(response.getBody()));
-        }
-    }
+            return response.getBody().readAllBytes();
+        });
 
-    public void removeAllSpaceMarinesFromStarship(Long starshipId) {
-        String url = spaceMarineUrl + "/starship/%d/marines".formatted(starshipId);
-        ResponseEntity<?> response = restTemplate.exchange(url, HttpMethod.DELETE, null, Object.class);
-
-        if (response.getStatusCode().isSameCodeAs(HttpStatus.BAD_REQUEST)) {
-            throw new BadRequestException(new BadParamsResponseDto("Starship %d was not found".formatted(starshipId)));
-        }
-
-        if (response.getStatusCode().isError()) {
-            throw new ResourceException((HttpStatus) response.getStatusCode(), "Got error while removing all space marines: %s".formatted(response.getBody()));
-        }
+        return new String(responseBytes);
     }
 }

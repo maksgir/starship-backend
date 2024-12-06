@@ -1,8 +1,6 @@
 package com.starship.unloadmanager.controller;
 
 import com.starship.unloadmanager.client.SpaceMarineClient;
-import com.starship.unloadmanager.dto.BadParamsResponseDto;
-import com.starship.unloadmanager.exception.BadRequestException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,23 +17,15 @@ public class StarshipUnloadController {
     }
 
     @PostMapping("/{starshipId}/unload/{spaceMarineId}")
-    public void unloadSpaceMarine(
+    public String unloadSpaceMarine(
         @PathVariable(name = "starshipId") Long starshipId,
         @PathVariable(name = "spaceMarineId") Long spaceMarineId
     ) {
-        var existenceResponse = spaceMarineClient.checkSpaceMarineExistInStarship(starshipId, spaceMarineId);
-
-        if (Boolean.FALSE.equals(existenceResponse.getBody())) {
-            throw new BadRequestException(
-                new BadParamsResponseDto("Space marine %d doesn't exists on starship %d".formatted(spaceMarineId, starshipId))
-            );
-        }
-
-        spaceMarineClient.removeSpaceMarineFromStarship(starshipId, spaceMarineId);
+        return spaceMarineClient.removeSpaceMarineFromStarship(starshipId, spaceMarineId);
     }
 
     @PostMapping("/{starshipId}/unload-all")
-    public void unloadAllSpaceMarines(@PathVariable(name = "starshipId") Long starshipId) {
-        spaceMarineClient.removeAllSpaceMarinesFromStarship(starshipId);
+    public String unloadAllSpaceMarines(@PathVariable(name = "starshipId") Long starshipId) {
+        return spaceMarineClient.removeAllSpaceMarinesFromStarship(starshipId);
     }
 }

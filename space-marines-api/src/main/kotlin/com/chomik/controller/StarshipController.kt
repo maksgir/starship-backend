@@ -1,9 +1,7 @@
 package com.chomik.controller
 
 import com.chomik.domain.dto.CreateStarshipRequest
-import com.chomik.domain.dto.SpaceMarineRequestDto
 import com.chomik.service.StarshipService
-import com.chomik.util.buildBadRequestResponse
 import jakarta.inject.Inject
 import jakarta.ws.rs.*
 import jakarta.ws.rs.core.MediaType
@@ -68,7 +66,7 @@ class StarshipController {
         @PathParam("starshipId") starshipId: Long,
         @PathParam("spaceMarineId") spaceMarineId: Long
     ): Response {
-        val rowAff = starshipService.unloadAllMarines(starshipId)
+        val rowAff = starshipService.unloadMarine(starshipId, spaceMarineId)
         return if (rowAff > 0) {
             Response.ok("Marine successfully unloaded").build()
         } else {

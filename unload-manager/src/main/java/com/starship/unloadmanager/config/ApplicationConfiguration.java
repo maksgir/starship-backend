@@ -9,7 +9,12 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class ApplicationConfiguration {
     @Bean
-    public SpaceMarineClient spaceMarineClient(@Value("${space.marine.url}") String spaceMarineUrl) {
-        return new SpaceMarineClient(spaceMarineUrl, new RestTemplate());
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+
+    @Bean
+    public SpaceMarineClient spaceMarineClient(@Value("${space.marine.url}") String spaceMarineUrl, RestTemplate restTemplate) {
+        return new SpaceMarineClient(spaceMarineUrl, restTemplate);
     }
 }
