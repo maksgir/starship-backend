@@ -69,26 +69,26 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 
-			<plugin>
-				<groupId>org.wildfly.plugins</groupId>
-				<artifactId>wildfly-maven-plugin</artifactId>
-				<version>2.0.2.Final</version>
-				<executions>
-					<execution>
-						<phase>install</phase>
-						<goals>
-							<goal>deploy</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<filename>${project.build.finalName}.war</filename>
-					<hostname>${deploy.wildfly.host}</hostname>
-					<port>${deploy.wildfly.port}</port>
-					<username>${deploy.wildfly.username}</username>
-					<password>${deploy.wildfly.password}</password>
-				</configuration>
-			</plugin>
+			<!--			<plugin>-->
+<!--				<groupId>org.wildfly.plugins</groupId>-->
+<!--				<artifactId>wildfly-maven-plugin</artifactId>-->
+<!--				<version>2.0.2.Final</version>-->
+<!--				<executions>-->
+<!--					<execution>-->
+<!--						<phase>install</phase>-->
+<!--						<goals>-->
+<!--							<goal>deploy</goal>-->
+<!--						</goals>-->
+<!--					</execution>-->
+<!--				</executions>-->
+<!--				<configuration>-->
+<!--					<filename>${project.build.finalName}.war</filename>-->
+<!--					<hostname>${deploy.wildfly.host}</hostname>-->
+<!--					<port>${deploy.wildfly.port}</port>-->
+<!--					<username>${deploy.wildfly.username}</username>-->
+<!--					<password>${deploy.wildfly.password}</password>-->
+<!--				</configuration>-->
+<!--			</plugin>-->
 		</plugins>
 	</build>
 
