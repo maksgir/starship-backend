@@ -49,22 +49,16 @@
 			<version>3.5.0.Final</version>
 			<scope>provided</scope>
 		</dependency>
-
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-test</artifactId>
-			<scope>test</scope>
-		</dependency>
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-stdlib</artifactId>
 			<version>${kotlin.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.starship.unloadmanager</groupId>
+			<artifactId>unload-manager-ejbs</artifactId>
+			<version>0.0.1</version>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 
@@ -88,11 +82,6 @@
 						<goals>
 							<goal>compile</goal>
 						</goals>
-						<configuration>
-							<sourceDirs>
-								<source>target/generated-sources/annotations</source>
-							</sourceDirs>
-						</configuration>
 					</execution>
 				</executions>
 
@@ -103,7 +92,7 @@
 					</compilerPlugins>
 
 					<pluginOptions>
-						<option>all-open:annotation=jakarta.ws.rs.Path</option>
+						<option>all-open:annotation=org.springframework.context.annotation.Configuration</option>
 						<option>all-open:annotation=jakarta.enterprise.context.ApplicationScoped</option>
 						<option>all-open:annotation=jakarta.ws.rs.Path</option>
 						<option>all-open:annotation=jakarta.ws.rs.Path</option>
@@ -131,26 +120,26 @@
 				</dependencies>
 			</plugin>
 
-			<!--			<plugin>-->
-<!--				<groupId>org.wildfly.plugins</groupId>-->
-<!--				<artifactId>wildfly-maven-plugin</artifactId>-->
-<!--				<version>2.0.2.Final</version>-->
-<!--				<executions>-->
-<!--					<execution>-->
-<!--						<phase>install</phase>-->
-<!--						<goals>-->
-<!--							<goal>deploy</goal>-->
-<!--						</goals>-->
-<!--					</execution>-->
-<!--				</executions>-->
-<!--				<configuration>-->
-<!--					<filename>${project.build.finalName}.war</filename>-->
-<!--					<hostname>${deploy.wildfly.host}</hostname>-->
-<!--					<port>${deploy.wildfly.port}</port>-->
-<!--					<username>${deploy.wildfly.username}</username>-->
-<!--					<password>${deploy.wildfly.password}</password>-->
-<!--				</configuration>-->
-<!--			</plugin>-->
+			<plugin>
+				<groupId>org.wildfly.plugins</groupId>
+				<artifactId>wildfly-maven-plugin</artifactId>
+				<version>2.0.2.Final</version>
+				<executions>
+					<execution>
+						<phase>install</phase>
+						<goals>
+							<goal>deploy</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<filename>${project.build.finalName}.war</filename>
+					<hostname>${deploy.wildfly.host}</hostname>
+					<port>${deploy.wildfly.port}</port>
+					<username>${deploy.wildfly.username}</username>
+					<password>${deploy.wildfly.password}</password>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
