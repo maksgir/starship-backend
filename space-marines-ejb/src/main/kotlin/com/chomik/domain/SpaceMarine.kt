@@ -13,6 +13,7 @@ import jakarta.xml.bind.annotation.XmlAccessType
 import jakarta.xml.bind.annotation.XmlAccessorType
 import jakarta.xml.bind.annotation.XmlRootElement
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter
+import java.io.Serializable
 
 @Entity
 @XmlRootElement
@@ -50,4 +51,4 @@ data class SpaceMarine(
     @ManyToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = "chapter_id", nullable = false)
     val chapter: Chapter? = null
-)
+): Serializable

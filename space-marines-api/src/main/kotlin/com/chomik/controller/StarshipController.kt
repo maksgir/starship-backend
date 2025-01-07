@@ -2,16 +2,19 @@ package com.chomik.controller
 
 import com.chomik.domain.dto.CreateStarshipRequest
 import com.chomik.service.StarshipService
-import jakarta.inject.Inject
-import jakarta.ws.rs.*
+import jakarta.ejb.EJB
+import jakarta.ws.rs.Consumes
+import jakarta.ws.rs.POST
+import jakarta.ws.rs.Path
+import jakarta.ws.rs.PathParam
+import jakarta.ws.rs.Produces
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
-
 
 @Path("/v1/starship")
 class StarshipController {
 
-    @Inject
+    @EJB
     private lateinit var starshipService: StarshipService
 
     @POST

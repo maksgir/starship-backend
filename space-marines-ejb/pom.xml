@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.chomik</groupId>
-    <artifactId>space-marines-api</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <groupId>com.starship.unloadmanager</groupId>
+    <artifactId>space-marines-ejb</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>ejb</packaging>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.version>1.9.23</kotlin.version>
-        <wildfly.version>27.0.1.Final</wildfly.version>
-        <java.version>17</java.version>
+        <kotlin.code.style>official</kotlin.code.style>
+        <kotlin.compiler.jvmTarget>17</kotlin.compiler.jvmTarget>
         <deploy.wildfly.host>127.0.0.1</deploy.wildfly.host>
         <deploy.wildfly.port>9990</deploy.wildfly.port>
         <deploy.wildfly.username>wildfly</deploy.wildfly.username>
         <deploy.wildfly.password>w1ldFly!</deploy.wildfly.password>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -48,11 +47,47 @@
             <version>3.0.0</version>
         </dependency>
 
+        <!-- PostgreSQL Driver -->
         <dependency>
-            <groupId>com.starship.unloadmanager</groupId>
-            <artifactId>space-marines-ejb</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.2</version>
+        </dependency>
+
+        <!-- JPA / Hibernate -->
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+            <version>2.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>6.4.4.Final</version>
+        </dependency>
+
+        <!-- EJB -->
+        <dependency>
+            <groupId>jakarta.ejb</groupId>
+            <artifactId>jakarta.ejb-api</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.ejb3</groupId>
+            <artifactId>jboss-ejb3-ext-api</artifactId>
+            <version>2.4.0.Final</version>
         </dependency>
     </dependencies>
 
@@ -87,9 +122,9 @@
                     </compilerPlugins>
 
                     <pluginOptions>
-                        <option>all-open:annotation=jakarta.ws.rs.Path</option>
                         <option>all-open:annotation=jakarta.enterprise.context.ApplicationScoped</option>
                         <option>all-open:annotation=jakarta.ws.rs.Provider</option>
+                        <option>all-open:annotation=jakarta.ejb.Stateless</option>
 
                         <option>no-arg:annotation=jakarta.persistence.Entity</option>
                         <option>no-arg:annotation=jakarta.persistence.Embedded</option>
@@ -111,13 +146,30 @@
                     </dependency>
                 </dependencies>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>3.3.1</version>
-                <configuration>
-                    <webXml>src\main\resources\WEB-INF\web.xml</webXml>
-                </configuration>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <archive>
+                                <manifest>
+                                    <!-- mainClass нужен только если у вас есть main метод -->
+                                </manifest>
+                            </archive>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
@@ -133,7 +185,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <filename>${project.build.finalName}.war</filename>
+                    <filename>${project.build.finalName}-jar-with-dependencies.jar</filename>
                     <hostname>${deploy.wildfly.host}</hostname>
                     <port>${deploy.wildfly.port}</port>
                     <username>${deploy.wildfly.username}</username>
