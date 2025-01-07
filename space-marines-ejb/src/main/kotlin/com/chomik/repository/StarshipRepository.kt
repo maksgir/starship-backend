@@ -3,7 +3,6 @@ package com.chomik.repository
 import com.chomik.configuration.DatabaseSessionManager
 import com.chomik.domain.Starship
 import com.chomik.domain.StarshipMarine
-import jakarta.ejb.LocalBean
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
 import org.hibernate.Session
