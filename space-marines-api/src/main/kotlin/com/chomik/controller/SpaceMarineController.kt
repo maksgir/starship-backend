@@ -11,7 +11,7 @@ import com.chomik.domain.enums.SortColumn
 import com.chomik.domain.enums.SortOrder
 import com.chomik.service.SpaceMarinesService
 import com.chomik.util.buildBadRequestResponse
-import jakarta.inject.Inject
+import jakarta.ejb.EJB
 import jakarta.ws.rs.Consumes
 import jakarta.ws.rs.DELETE
 import jakarta.ws.rs.DefaultValue
@@ -25,11 +25,10 @@ import jakarta.ws.rs.QueryParam
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 
-
 @Path("/v1/spacemarines")
 class SpaceMarineController {
 
-    @Inject
+    @EJB
     private lateinit var spaceMarinesService: SpaceMarinesService
 
     @GET

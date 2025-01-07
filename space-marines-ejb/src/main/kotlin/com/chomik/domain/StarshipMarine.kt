@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull
 import jakarta.xml.bind.annotation.XmlAccessType
 import jakarta.xml.bind.annotation.XmlAccessorType
 import jakarta.xml.bind.annotation.XmlRootElement
-
+import java.io.Serializable
 
 @Entity
 @XmlRootElement
@@ -33,4 +33,4 @@ data class StarshipMarine(
     @ManyToOne(optional = false)
     @JoinColumn(name = "spaceMarineId", referencedColumnName = "id", insertable = false, updatable = false)
     val spaceMarine: SpaceMarine? = null
-)
+): Serializable
