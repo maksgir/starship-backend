@@ -9,6 +9,7 @@
 
     <properties>
         <kotlin.version>1.9.23</kotlin.version>
+        <kotlin.compiler.jvmTarget>17</kotlin.compiler.jvmTarget>
         <wildfly.version>27.0.1.Final</wildfly.version>
         <java.version>17</java.version>
         <deploy.wildfly.host>127.0.0.1</deploy.wildfly.host>

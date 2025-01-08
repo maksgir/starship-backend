@@ -9,7 +9,7 @@ class ApplicationConfiguration {
     @Bean
     fun ejbBean(): JndiObjectFactoryBean {
         val factoryBean = JndiObjectFactoryBean()
-        factoryBean.jndiName = "ejb:/unload-manager-ejbs-0.0.1/SpaceMarineClientImpl!com.starship.unloadmanager.SpaceMarineClientInterface"
+        factoryBean.jndiName = "ejb:/unload-manager-ejbs-0.0.1-jar-with-dependencies/SpaceMarineClientImpl!com.starship.unloadmanager.SpaceMarineClientInterface"
         factoryBean.isResourceRef = true
         return factoryBean
     }
