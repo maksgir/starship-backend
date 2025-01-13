@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull
 import jakarta.xml.bind.annotation.XmlAccessType
 import jakarta.xml.bind.annotation.XmlAccessorType
 import jakarta.xml.bind.annotation.XmlRootElement
+import java.io.Serializable
 
 @Embeddable
 @XmlRootElement
@@ -19,4 +20,4 @@ data class Coordinates(
     @field:NotNull
     @field:Max(708)
     val y: Int
-)
+): Serializable

@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Positive
 import jakarta.xml.bind.annotation.XmlAccessType
 import jakarta.xml.bind.annotation.XmlAccessorType
 import jakarta.xml.bind.annotation.XmlRootElement
+import java.io.Serializable
 
 @Entity
 @XmlRootElement
@@ -28,4 +29,4 @@ data class Chapter(
     val marinesCount: Int,
 
     val world: String? = null
-)
+): Serializable
