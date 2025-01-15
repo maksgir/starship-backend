@@ -1,4 +1,4 @@
-package com.starship.unloadmanager.util
+package com.chomik.util
 
 import jakarta.ejb.Stateless
 
