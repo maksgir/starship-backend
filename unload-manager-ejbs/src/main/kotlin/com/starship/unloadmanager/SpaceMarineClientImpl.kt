@@ -1,6 +1,6 @@
 package com.starship.unloadmanager
 
-import com.starship.unloadmanager.util.PropertiesUtil
+import com.chomik.util.PropertiesUtil
 import jakarta.annotation.PostConstruct
 import jakarta.ejb.Startup
 import jakarta.ejb.Stateless
