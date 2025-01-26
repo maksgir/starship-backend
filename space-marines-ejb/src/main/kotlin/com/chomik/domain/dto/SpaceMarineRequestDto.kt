@@ -9,6 +9,7 @@ import com.chomik.domain.enums.WeaponType
 import jakarta.xml.bind.annotation.XmlAccessType
 import jakarta.xml.bind.annotation.XmlAccessorType
 import jakarta.xml.bind.annotation.XmlRootElement
+import java.io.Serializable
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -20,7 +21,7 @@ data class SpaceMarineRequestDto(
     val weaponType: WeaponType? = null,
     val meleeWeapon: MeleeWeapon,
     val chapterRequestDto: ChapterRequestDto
-) {
+): Serializable {
     fun toSpaceMarineEntity(id: Long? = null): SpaceMarine = SpaceMarine(
         id = id,
         name = name,
