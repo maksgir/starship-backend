@@ -38,8 +38,8 @@ class ConsulRegistrationService {
         val serviceId = "$serviceName-id"
 
         val serviceAddress = "127.0.0.1"
-        val httpsServicePort = 27880
-        val httpServicePort = 27809
+        val httpsServicePort = 443
+        val httpServicePort = 27880
 
         val registrationJson = """
             {

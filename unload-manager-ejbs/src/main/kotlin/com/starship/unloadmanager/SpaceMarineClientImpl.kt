@@ -52,6 +52,6 @@ class SpaceMarineClientImpl : SpaceMarineClientInterface {
     }
 
     companion object {
-        private const val SPACE_MARINE_URL = "https://127.0.0.1:8443/space-marines-api-0.0.1-SNAPSHOT/api/v1"
+        private const val SPACE_MARINE_URL = "https://127.0.0.1:6364/space-marines-api-0.0.1-SNAPSHOT/api/v1"
     }
 }

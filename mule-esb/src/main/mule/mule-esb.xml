@@ -1,0 +1,42 @@
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd  http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd  http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd">
+  <http:listener-config name="mule_listener_config">
+    <http:listener-connection host="127.0.0.1" port="6364" protocol="HTTPS">
+      <tls:context>
+        <tls:trust-store password="password" path="soa.keystore" type="PKCS12" insecure="true"></tls:trust-store>
+        <tls:key-store password="password" keyPassword="password" alias="soa" path="soa.keystore" type="PKCS12"></tls:key-store>
+      </tls:context>
+    </http:listener-connection>
+  </http:listener-config>
+
+  <http:request-config name="space_marine_request_config">
+    <http:request-connection host="127.0.0.1" port="8443" protocol="HTTPS">
+       <tls:context>
+        <tls:trust-store password="password" path="soa.keystore" type="PKCS12" insecure="true"></tls:trust-store>
+        <tls:key-store password="password" keyPassword="password" alias="soa" path="soa.keystore" type="PKCS12"></tls:key-store>
+      </tls:context>
+    </http:request-connection>
+    
+  </http:request-config>
+  <flow name="unloadAllStarshipListener">
+    <http:listener config-ref="mule_listener_config" doc:id="nfgpju" doc:name="Listener" path="space-marines-api-0.0.1-SNAPSHOT/api/v1/starship/{starshipId}/unload-all">
+      <http:response statusCode="200"></http:response>
+    </http:listener>
+    <logger doc:id="huvszd" doc:name="Logger" level="INFO" message="#[attributes.uriParams]"></logger>
+    <http:request config-ref="space_marine_request_config" doc:id="uecqti" doc:name="Request" method="POST" outputMimeType="application/xml" path="space-marines-api-0.0.1-SNAPSHOT/api/v1/starship/{starshipId}/unload-all">
+      <http:uri-params>
+        <![CDATA[#[attributes.uriParams]]]>
+      </http:uri-params>
+    </http:request>
+    <logger doc:id="wortck" doc:name="Logger" level="INFO" message="#[attributes]"></logger>
+  </flow>
+  <flow name="unloadStarhipByIdListener">
+    <http:listener config-ref="mule_listener_config" doc:id="shfhec" doc:name="Listener" path="space-marines-api-0.0.1-SNAPSHOT/api/v1/starship/{starshipId}/unload/{spaceMarineId}"></http:listener>
+    <logger doc:id="dapvvy" doc:name="Logger" message="#[attributes.uriParams]"></logger>
+    <http:request config-ref="space_marine_request_config" doc:id="rpgtoq" doc:name="Request" method="POST" outputMimeType="application/xml" path="space-marines-api-0.0.1-SNAPSHOT/api/v1/starship/{starshipId}/unload/{spaceMarineId}">
+      <http:uri-params>
+        <![CDATA[#[attributes.uriParams]]]>
+      </http:uri-params>
+    </http:request>
+    <logger doc:id="nztxip" doc:name="Logger" message="#[attributes]"></logger>
+  </flow>
+</mule>
