@@ -1,0 +1,7 @@
+<deployment>
+    <exclusions>
+        <module name="javax.xml.ws.api" />
+        <module name="com.sun.xml.bind" />
+        <module name="com.sun.xml.ws" />
+    </exclusions>
+</deployment>
