@@ -15,8 +15,8 @@
         <kotlin.compiler.jvmTarget>17</kotlin.compiler.jvmTarget>
         <deploy.wildfly.host>127.0.0.1</deploy.wildfly.host>
         <deploy.wildfly.port>9990</deploy.wildfly.port>
-        <deploy.wildfly.username>wildfly</deploy.wildfly.username>
-        <deploy.wildfly.password>w1ldFly!</deploy.wildfly.password>
+        <deploy.wildfly.username>user</deploy.wildfly.username>
+        <deploy.wildfly.password>user</deploy.wildfly.password>
     </properties>
 
     <dependencies>
@@ -190,6 +190,14 @@
                     <port>${deploy.wildfly.port}</port>
                     <username>${deploy.wildfly.username}</username>
                     <password>${deploy.wildfly.password}</password>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ejb-plugin</artifactId>
+                <configuration>
+                    <ejbVersion>3.0</ejbVersion>
                 </configuration>
             </plugin>
         </plugins>
