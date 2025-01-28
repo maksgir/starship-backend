@@ -36,8 +36,9 @@ class SpaceMarineClientImpl : SpaceMarineClientInterface {
             .target("$SPACE_MARINE_URL/starship/$starshipId/unload/$spaceMarineId")
             .request()
             .post(Entity.text(""))
-
-        return SpaceMarineResponse(response.status)
+        return SpaceMarineResponse().apply {
+            status = response.status
+        }
     }
 
     override fun removeAllSpaceMarinesFromStarship(starshipId: Long): SpaceMarineResponse {
@@ -48,10 +49,12 @@ class SpaceMarineClientImpl : SpaceMarineClientInterface {
             .request()
             .post(Entity.text(""))
 
-        return SpaceMarineResponse(response.status)
+        return SpaceMarineResponse().apply {
+            status = response.status
+        }
     }
 
     companion object {
-        private const val SPACE_MARINE_URL = "https://127.0.0.1:6364/space-marines-api-0.0.1-SNAPSHOT/api/v1"
+        private const val SPACE_MARINE_URL = "https://127.0.0.1:27843/space-marines-api-0.0.1-SNAPSHOT/api/v1"
     }
 }
